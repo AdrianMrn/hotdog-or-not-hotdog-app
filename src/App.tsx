@@ -1,29 +1,32 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, FlatList } from 'react-native';
-import * as theme from './theme';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-declare const global: { HermesInternal: null | {} };
+import ModelScreen from './screens/ModelsScreen';
+import DetailScreen from './screens/TrainerScreen';
+import TrainerScreen from './screens/TrainerScreen';
+import ClassifierScreen from './screens/ClassifierScreen';
+import DetailStack from './screens/DetailStack';
 
-function App() {
+export type RootStackParamList = {
+    Models: undefined;
+    Detail: { modelId: null | number; name: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+export default function App() {
     return (
-        <>
-            <SafeAreaView style={[theme.flex.expand]}>
-                <ScrollView style={[theme.flex.expand, theme.bg.red]}>
-                    <View></View>
-                    <Text>yu</Text>
-                    <Text>yu</Text>
-                    <Text>yu</Text>
-                    <Text>yu</Text>
-                </ScrollView>
-
-                <View style={[theme.p.md]}>
-                    <TouchableOpacity style={[theme.p.md, theme.bg.gray, theme.radius.full, theme.shadow.sm]}>
-                        <Text style={[theme.text.center, theme.text.lg, theme.text.white]}>Create new model</Text>
-                    </TouchableOpacity>
-                </View>
-            </SafeAreaView>
-        </>
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Models">
+                <Stack.Screen name="Models" component={ModelScreen} options={{ title: 'Models' }} />
+                <Stack.Screen
+                    name="Detail"
+                    component={DetailStack}
+                    options={({ route }) => ({ title: route.params.name })}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
-
-export default App;
