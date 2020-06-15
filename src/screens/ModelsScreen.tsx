@@ -1,33 +1,39 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from 'src/App';
 import * as theme from '../theme';
+import { dummyModels } from '../dummydata';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
-export type Model = {
-    id: number;
+export type Category = {
+    id: number | null;
     name: string;
-    categories: Array<string>;
+    items: Array<{
+        id: number;
+        image_url: string;
+    }>;
 };
 
-const models: Array<Model> = [
-    { id: 1, name: 'foo', categories: [] },
-    { id: 2, name: 'bar', categories: [] },
-    { id: 3, name: 'rab', categories: [] },
-    { id: 4, name: 'oof', categories: [] },
-];
+export type Model = {
+    id: number | null;
+    name: string;
+    categories: Array<Category>;
+};
+
+const models: Array<Model> = dummyModels;
 
 export default function ModelsScreen() {
-    const navigation = useNavigation<NavigationProp<RootStackParamList, 'Models'>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList, 'ModelIndex'>>();
 
     return (
-        <SafeAreaView style={[theme.flex.expand, theme.bg.white]}>
+        <View style={[theme.flex.expand, theme.bg.white]}>
             <ScrollView style={[theme.flex.expand]}>
                 {models.map((model) => (
                     <TouchableOpacity
-                        key={model.id}
+                        key={model.id!}
                         style={[theme.border.b, theme.p.md]}
-                        onPress={() => navigation.navigate('Detail', { modelId: model.id, name: model.name })}
+                        onPress={() => navigation.navigate('ModelDetail', { modelId: model.id, name: model.name })}
                     >
                         <Text>{model.name}</Text>
                     </TouchableOpacity>
@@ -35,10 +41,10 @@ export default function ModelsScreen() {
             </ScrollView>
 
             <View style={[theme.p.md]}>
-                <TouchableOpacity style={[theme.p.md, theme.bg.gray, theme.radius.full, theme.shadow.sm]}>
+                <TouchableOpacity style={[theme.p.md, theme.bg.gray, theme.radius.full]}>
                     <Text style={[theme.text.center, theme.text.lg, theme.text.white]}>Create new model</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
